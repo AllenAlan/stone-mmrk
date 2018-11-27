@@ -1,0 +1,7 @@
+#redis
+    #windows 环境
+        #启动服务
+        redis-server --service-start
+        #停止服务
+        redis-server --service-stop
+

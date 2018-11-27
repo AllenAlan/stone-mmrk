@@ -1,0 +1,101 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    name: apple
+    type: com.alibaba.druid.pool.DruidDataSource
+#    initialization-mode: always
+#    platform: mysql
+#    schema: classpath:schema/schema-mysql.sql
+#    data: classpath:data/data-mysql.sql
+
+    # 使用druid数据源
+#druid相关配置
+    druid:
+      #监控统计拦截的filters
+      filters: stat
+      driver-class-name: com.mysql.jdbc.Driver
+      #基本属性
+      url: jdbc:mysql://127.0.0.1:3307/apple?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+      username: root
+      password: Thuglife@23
+      #配置初始化大小/最小/最大
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      #获取连接等待超时时间
+      max-wait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+
+  quartz:
+    jdbc:
+      initialize-schema: never
+    job-store-type: jdbc
+
+
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 10000ms
+    database: 0 # Redis默认情况下有16个分片，这里配置具体使用的分片，默认是0
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 8 # 连接池中的最大空闲连接 默认 8
+        min-idle: 0 # 连接池中的最小空闲连接 默认 0
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual # 手动ACK 不开启自动ACK模式,目的是防止报错后未正确处理消息丢失 默认 为 none
+
+#   mvc:
+#     throw-exception-if-no-handler-found: true
+#     public.templates.error-path-pattern: /statics/**
+#  resources:
+#    add-mappings: false
+#  http:
+#    encoding:
+#      charset: UTF-8
+#      enabled: true
+#      force: true
+#  messages:
+#    encoding: UTF-8
+
+# mybatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.allen.stone.domain  # 注意：对应实体类的路径
+# 驼峰命名规范 如：数据库字段是  order_id 那么 实体字段就要写成 orderId
+  configuration:
+    map-underscore-to-camel-case: true
+# 通用Mapper
+mapper:
+  identity: MYSQL
+  mappers: tk.mybatis.mapper.common.BaseMapper
+  not-empty: true # 设置 insert 和 update 中，是否判断字符串类型!=''
+  enum-as-simple-type: true
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+  reasonable: true
+
